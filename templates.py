@@ -45,7 +45,7 @@ static class PropertyDefs {
         for (int i = this.properties.keys.length - 1; i >= 0; i--) {
             String key = this.properties.keys[i];
             PropertyEnum propEnum = this.properties.enums[i];
-            int enumSize = (int) Math.ceil(Math.sqrt(propEnum.values.length));
+            int enumSize = (int) Math.ceil(Math.log(propEnum.size()) / Math.log(2));
             int x = ((1 << enumSize) - 1) & (serial >> ((sizeAcc + 1) - 1));
             sizeAcc += enumSize;
             result.put(key, propEnum.deserialize(x));
@@ -66,6 +66,31 @@ static class PropertyEnum {
     }
     public Object defaultValue() {
         return values[0];
+    }
+    public int size() {
+        return values.length;
+    }
+}
+static class PropertyEnumBoolean extends PropertyEnum {
+    public PropertyEnumBoolean() {
+        super();
+    }
+    @Override
+    public Object deserialize(int serial) {
+        return serial != 1;
+    }
+    @Override
+    public int serialize(Object value) {
+        boolean b = (boolean) value;
+        if (b) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+    @Override
+    public int size() {
+        return 2;
     }
 }
 static class PropMap {
