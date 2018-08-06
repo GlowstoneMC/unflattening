@@ -1,0 +1,4 @@
+.idea/
+reports/
+*.json
+__pycache__/
