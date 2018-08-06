@@ -37,6 +37,7 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
     data = load_data()
     block_faces = OrderedDict()
     properties = OrderedDict()
+    state_base_ids = list()
     for block_type in data.keys():
         block = data[block_type]
         mat = to_bukkit_material_enum(block_type)
@@ -47,6 +48,9 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
                 block_faces[mat] = props["facing"]
         else:
             properties[mat] = {}
+        base_id = block["states"][0]["id"]
+        for state in block["states"]:
+            state_base_ids.append(base_id)
 
     # write the java file
     def _props_map(props):
@@ -76,6 +80,11 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
             for mat, faces in block_faces.items()
         )))
     )
+
+    class_content += templates.STATE_BASE_IDS_CLASS.format(
+        ids=", ".join(
+            ("\n" + (str(state)) if (idx + 1) % 20 is 0 else str(state) for idx, state in enumerate(state_base_ids))
+        ))
 
     # output
     return templates.JAVA_FILE.format(

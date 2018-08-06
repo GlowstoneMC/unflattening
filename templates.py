@@ -35,7 +35,7 @@ static class PropertyDefs {
         for (int i = this.properties.keys.length - 1; i >= 0; i--) {
             String key = this.properties.keys[i];
             PropertyEnum propEnum = this.properties.enums[i];
-            mask |= propEnum.serialize(values.getOrDefault(key, propEnum.defaultValue()));
+            mask |= propEnum.serialize(values.getOrDefault(key, propEnum.defaultValue())) << i;
         }
         return mask;
     }
@@ -109,4 +109,7 @@ possibleFacesBuilder
 DIRECTIONAL_POSSIBLE_FACES = possibleFacesBuilder.build();
 """
 
-
+STATE_BASE_IDS_CLASS = \
+"""
+static final int[] STATE_BASE_IDS = new int[]{{{ids}}};
+"""
