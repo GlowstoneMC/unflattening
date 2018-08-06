@@ -21,6 +21,7 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
     class_content = ""
     static_content = ""
     imports = (
+        "com.google.common.collect.ImmutableBiMap",
         "com.google.common.collect.ImmutableMap",
         "com.google.common.collect.Iterators",
         "java.util.Arrays",
@@ -38,6 +39,7 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
     block_faces = OrderedDict()
     properties = OrderedDict()
     state_base_ids = list()
+    mat_ids = OrderedDict()
     for block_type in data.keys():
         block = data[block_type]
         mat = to_bukkit_material_enum(block_type)
@@ -49,6 +51,7 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
         else:
             properties[mat] = {}
         base_id = block["states"][0]["id"]
+        mat_ids[mat] = base_id
         for state in block["states"]:
             state_base_ids.append(base_id)
 
@@ -64,8 +67,9 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
     static_content += templates.MATERIAL_PROPERTIES_STATIC.format(
         put_statements=_indent(4, "\n".join((
             ".put(Material.{mat}, "
-            "new PropertyDefs(propMapOf({props})))".format(mat=mat,
-                                                                 props=_props_map(props))
+            "new PropertyDefs(propMapOf({props})))".format(
+                mat=mat,
+                props=_props_map(props))
             for mat, props in properties.items()
         )))
     )
@@ -73,10 +77,11 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
     class_content += templates.DIRECTIONAL_POSSIBLE_FACES_CLASS
     static_content += templates.DIRECTIONAL_POSSIBLE_FACES_STATIC.format(
         put_statements=_indent(4, "\n".join((
-            ".put(Material.{mat}, Arrays.asList({faces}))".format(mat=mat,
-                                                                  faces=", ".join(
-                                                                      ("BlockFace." + face.upper() for face in
-                                                                       faces)))
+            ".put(Material.{mat}, Arrays.asList({faces}))".format(
+                mat=mat,
+                faces=", ".join(
+                    ("BlockFace." + face.upper() for face in
+                     faces)))
             for mat, faces in block_faces.items()
         )))
     )
@@ -85,6 +90,17 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
         ids=", ".join(
             ("\n" + (str(state)) if (idx + 1) % 20 is 0 else str(state) for idx, state in enumerate(state_base_ids))
         ))
+
+    class_content += templates.MATERIAL_ID_MAP_CLASS
+    static_content += templates.MATERIAL_ID_MAP_STATIC.format(
+        put_statements=_indent(4, "\n".join((
+            ".put({base_id}, Material.{mat})".format(
+                base_id=base_id,
+                mat=mat
+            )
+            for mat, base_id in mat_ids.items()
+        )))
+    )
 
     # output
     return templates.JAVA_FILE.format(

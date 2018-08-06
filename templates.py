@@ -145,3 +145,16 @@ STATE_BASE_IDS_CLASS = \
 """
 static final int[] STATE_BASE_IDS = new int[]{{{ids}}};
 """
+
+MATERIAL_ID_MAP_CLASS = \
+"""
+static final ImmutableBiMap<Integer, Material> MATERIAL_ID_MAP;
+"""
+
+MATERIAL_ID_MAP_STATIC = \
+"""ImmutableBiMap.Builder<Integer, Material> materialIdMapBuilder = ImmutableBiMap.builder();
+materialIdMapBuilder
+{put_statements}
+;
+MATERIAL_ID_MAP = materialIdMapBuilder.build();
+"""
