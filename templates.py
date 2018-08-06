@@ -81,16 +81,23 @@ static class PropertyEnumBoolean extends PropertyEnum {
     }
     @Override
     public int serialize(Object value) {
-        boolean b = (boolean) value;
-        if (b) {
-            return 0;
+        boolean b;
+        if (value instanceof Boolean) {
+            b = (Boolean) value;
+        } else if (value instanceof String) {
+            b = Boolean.valueOf((String) value);
         } else {
-            return 1;
+            b = true;
         }
+        return b ? 0 : 1;
     }
     @Override
     public int size() {
         return 2;
+    }
+    @Override
+    public Object defaultValue() {
+        return true;
     }
 }
 static class PropMap {
