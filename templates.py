@@ -146,9 +146,15 @@ STATE_BASE_IDS_YML = \
 stateBaseIds: [{ids}]
 """
 
+STATE_BASE_IDS_STATIC = \
+"""
+YamlConfiguration stateBaseIdsYml = YamlConfiguration.loadConfiguration(new InputStreamReader(GeneratedFlatteningData.class.getClassLoader().getResourceAsStream("builtin/stateBaseIds.yml")));
+stateBaseIdsYml.getIntegerList("stateBaseIds").toArray(STATE_BASE_IDS);
+"""
+
 STATE_BASE_IDS_CLASS = \
 """
-static final int[] STATE_BASE_IDS = new int[{ids_length}];
+static final Integer[] STATE_BASE_IDS = new Integer[{ids_length}];
 """
 
 MATERIAL_ID_MAP_CLASS = \

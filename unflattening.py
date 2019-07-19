@@ -25,14 +25,17 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
         "com.google.common.collect.ImmutableBiMap",
         "com.google.common.collect.ImmutableMap",
         "com.google.common.collect.Iterators",
+        "java.io.InputStreamReader",
         "java.util.Arrays",
         "java.util.ArrayList",
+        "java.util.Arrays",
         "java.util.Iterator",
         "java.util.List",
         "java.util.Map",
         "org.apache.commons.lang.ArrayUtils",
         "org.bukkit.Material",
         "org.bukkit.block.BlockFace",
+        "org.bukkit.configuration.file.YamlConfiguration",
     )
 
     # parse the data
@@ -88,6 +91,7 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
     )
 
     class_content += templates.STATE_BASE_IDS_CLASS.format(ids_length=len(state_base_ids))
+    static_content += templates.STATE_BASE_IDS_STATIC
 
     yml_output = templates.STATE_BASE_IDS_YML.format(
         ids=", ".join(
