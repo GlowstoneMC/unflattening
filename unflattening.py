@@ -122,7 +122,7 @@ def load_data(path="generated/reports/blocks.json") -> dict:
 
 
 if __name__ == '__main__':
-    if sys.argv[1] == "--yml":
+    if len(sys.argv) > 1 and sys.argv[1] == "--yml":
         print(make_java_class()[1])
     else:
         print(make_java_class()[0])
