@@ -6,7 +6,6 @@ package {package};
 @Deprecated
 public class {class_name} {{
 {class_content}
-
     static {{
 {static_content}
     }}
@@ -27,6 +26,7 @@ static class PropertyDefs {
     PropertyDefs(PropMap properties) {
         this.properties = properties;
     }
+
     public int serialize(Map<String, Object> values) {
         if (values == null) {
             return 0;
@@ -39,6 +39,7 @@ static class PropertyDefs {
         }
         return mask;
     }
+
     public Map<String, Object> deserialize(int serial) {
         int sizeAcc = 0;
         ImmutableMap.Builder<String, Object> result = ImmutableMap.builder();
@@ -53,32 +54,41 @@ static class PropertyDefs {
         return result.build();
     }
 }
+
 static class PropertyEnum {
     private final String[] values;
+
     public PropertyEnum(String... values) {
         this.values = values;
     }
+
     public int serialize(Object value) {
         return ArrayUtils.indexOf(values, value);
     }
+
     public Object deserialize(int serial) {
         return values[serial];
     }
+
     public Object defaultValue() {
         return values[0];
     }
+
     public int size() {
         return values.length;
     }
 }
+
 static class PropertyEnumBoolean extends PropertyEnum {
     public PropertyEnumBoolean() {
         super();
     }
+
     @Override
     public Object deserialize(int serial) {
         return serial != 1;
     }
+
     @Override
     public int serialize(Object value) {
         boolean b;
@@ -91,15 +101,18 @@ static class PropertyEnumBoolean extends PropertyEnum {
         }
         return b ? 0 : 1;
     }
+
     @Override
     public int size() {
         return 2;
     }
+
     @Override
     public Object defaultValue() {
         return true;
     }
 }
+
 static class PropMap {
     private final String[] keys;
     private final PropertyEnum[] enums;
@@ -109,6 +122,7 @@ static class PropMap {
         this.enums = enums;
     }
 }
+
 private static PropMap propMapOf(Object... keysAndVals) {
     Iterator<Object> iter = Iterators.forArray(keysAndVals);
     List<String> keys = new ArrayList<>();
@@ -119,6 +133,7 @@ private static PropMap propMapOf(Object... keysAndVals) {
     }
     return new PropMap(keys.toArray(new String[0]), enums.toArray(new PropertyEnum[0]));
 }
+
 """
 
 MATERIAL_PROPERTIES_STATIC = \

@@ -26,7 +26,6 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
         "com.google.common.collect.ImmutableMap",
         "com.google.common.collect.Iterators",
         "java.io.InputStreamReader",
-        "java.util.Arrays",
         "java.util.ArrayList",
         "java.util.Arrays",
         "java.util.Iterator",
