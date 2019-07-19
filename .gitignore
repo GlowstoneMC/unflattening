@@ -1,4 +1,6 @@
 .idea/
-reports/
+generated/
 *.json
+*.java
+*.yml
 __pycache__/
