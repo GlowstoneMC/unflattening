@@ -1,3 +1,4 @@
+import sys
 import json
 from collections import OrderedDict
 
@@ -86,9 +87,11 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
         )))
     )
 
-    class_content += templates.STATE_BASE_IDS_CLASS.format(
+    class_content += templates.STATE_BASE_IDS_CLASS.format(ids_length=len(state_base_ids))
+
+    yml_output = templates.STATE_BASE_IDS_YML.format(
         ids=", ".join(
-            ("\n" + (str(state)) if (idx + 1) % 20 is 0 else str(state) for idx, state in enumerate(state_base_ids))
+            (str(state) for idx, state in enumerate(state_base_ids))
         ))
 
     class_content += templates.MATERIAL_ID_MAP_CLASS
@@ -103,20 +106,24 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
     )
 
     # output
-    return templates.JAVA_FILE.format(
+    return (templates.JAVA_FILE.format(
         header=templates.JAVA_HEADER.format(header=header),
         package=package,
         class_name=class_name,
         class_content=_indent(4, class_content),
         static_content=_indent(8, static_content),
         imports="\n".join(("import " + clazz + ";" for clazz in imports))
-    )
+    ), yml_output)
 
 
-def load_data(path="reports/blocks.json") -> dict:
+def load_data(path="generated/reports/blocks.json") -> dict:
     with open(path) as file:
         return json.load(file)
 
 
 if __name__ == '__main__':
-    print(make_java_class())
+    if sys.argv[1] == "--yml":
+        print(make_java_class()[1])
+    else:
+        print(make_java_class()[0])
+

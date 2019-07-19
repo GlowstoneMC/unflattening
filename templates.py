@@ -141,9 +141,14 @@ possibleFacesBuilder
 DIRECTIONAL_POSSIBLE_FACES = possibleFacesBuilder.build();
 """
 
+STATE_BASE_IDS_YML = \
+"""
+stateBaseIds: [{ids}]
+"""
+
 STATE_BASE_IDS_CLASS = \
 """
-static final int[] STATE_BASE_IDS = new int[]{{{ids}}};
+static final int[] STATE_BASE_IDS = new int[{ids_length}];
 """
 
 MATERIAL_ID_MAP_CLASS = \
