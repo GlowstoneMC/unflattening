@@ -158,18 +158,21 @@ DIRECTIONAL_POSSIBLE_FACES = possibleFacesBuilder.build();
 
 STATE_BASE_IDS_YML = \
 """
-stateBaseIds: [{ids}]
+stateBaseIds: [{base_ids}]
+stateDefaultIds: [{default_ids}]
 """
 
 STATE_BASE_IDS_STATIC = \
 """
-YamlConfiguration stateBaseIdsYml = YamlConfiguration.loadConfiguration(new InputStreamReader(GeneratedFlatteningData.class.getClassLoader().getResourceAsStream("builtin/stateBaseIds.yml")));
-stateBaseIdsYml.getIntegerList("stateBaseIds").toArray(STATE_BASE_IDS);
+YamlConfiguration stateIdsYml = YamlConfiguration.loadConfiguration(new InputStreamReader(GeneratedFlatteningData.class.getClassLoader().getResourceAsStream("builtin/baseIds.yml")));
+stateIdsYml.getIntegerList("stateBaseIds").toArray(STATE_BASE_IDS);
+stateIdsYml.getIntegerList("stateDefaultIds").toArray(STATE_DEFAULT_IDS);
 """
 
 STATE_BASE_IDS_CLASS = \
 """
 static final Integer[] STATE_BASE_IDS = new Integer[{ids_length}];
+static final Integer[] STATE_DEFAULT_IDS = new Integer[{ids_length}];
 """
 
 MATERIAL_ID_MAP_CLASS = \

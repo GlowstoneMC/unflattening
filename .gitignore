@@ -3,4 +3,5 @@ generated/
 *.json
 *.java
 *.yml
+*.jar
 __pycache__/

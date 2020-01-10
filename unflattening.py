@@ -42,6 +42,7 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
     block_faces = OrderedDict()
     properties = OrderedDict()
     state_base_ids = list()
+    state_default_ids = list()
     mat_ids = OrderedDict()
     for block_type in data.keys():
         block = data[block_type]
@@ -55,8 +56,13 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
             properties[mat] = {}
         base_id = block["states"][0]["id"]
         mat_ids[mat] = base_id
+        default_id = None
         for state in block["states"]:
+            if state.get("default", None) is True:
+                default_id = state["id"]
             state_base_ids.append(base_id)
+        for state in block["states"]:
+            state_default_ids.append(default_id)
 
     # write the java file
     def _props_map(props):
@@ -93,9 +99,13 @@ def make_java_class(package="net.glowstone.block.flattening.generated", class_na
     static_content += templates.STATE_BASE_IDS_STATIC
 
     yml_output = templates.STATE_BASE_IDS_YML.format(
-        ids=", ".join(
+        base_ids=", ".join(
             (str(state) for idx, state in enumerate(state_base_ids))
-        ))
+        ),
+        default_ids=", ".join(
+            (str(state) for idx, state in enumerate(state_default_ids))
+        )
+    )
 
     class_content += templates.MATERIAL_ID_MAP_CLASS
     static_content += templates.MATERIAL_ID_MAP_STATIC.format(
